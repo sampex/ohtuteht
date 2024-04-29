@@ -14,6 +14,7 @@ Login With Incorrect Password
 Login With Nonexistent Username
     Input Credentials  saara  saara12
     Output Should Contain  Invalid username or password
+
 *** Keywords ***
 Create User And Input Login Command
     Create User  kalle  kalle123
