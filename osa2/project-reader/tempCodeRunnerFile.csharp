@@ -1,0 +1,81 @@
+/*  Tämä oli vuonna 2020 käytetty C#-esimerkki joka muovattiin alunperin osoitteessa
+ *  https://repl.it/repls/QuerulousImpartialStructures
+ *  ReplItin käyttö on nykyään hankalaa, joten voit kokeilla
+ *  https://www.jdoodle.com/compile-c-sharp-online/
+ */
+
+using System;
+
+public class MainClass {
+  
+    // Matkimme nyt struct-tietuetta luokalla,
+    // mutta oikeasti _EI_KOSKAAN_ laiteta
+    // vain public attribuutteja luokkaan,
+    // vaan attribuutit ovat aina privateja
+    // ja metodit hoitavat tiedon käsittelyn.
+    class Luku  {
+        public int Arvo;
+        public Luku Seuraava;
+    }
+
+    static Luku Lisaa(Luku lukujono, int arvo) {
+        Luku uusi = null;
+        uusi = new Luku();
+        uusi.Arvo = arvo;
+        uusi.Seuraava = lukujono;
+        return uusi;
+    }
+
+    static void Tyhjenna(Luku lukujono) {
+        if (lukujono == null) return;
+        Luku seuraava = lukujono.Seuraava;
+        lukujono.Seuraava = null;
+        Tyhjenna(seuraava);
+    }
+
+    static int SeuraavaFibo(int eka, int toka) {
+        return eka + toka;
+    }
+
+    static Luku LaskeFibo(Luku lukujono, int lkm) {
+        for (int i=0; i < lkm; ++i) {
+            int e = lukujono.Arvo;
+            int ee = lukujono.Seuraava.Arvo;
+            int uusi = SeuraavaFibo(ee, e);
+            lukujono = Lisaa(lukujono, uusi);
+        }
+
+        return lukujono;
+    }
+
+    static void TulostaLuvut(Luku lukujono) {
+        Luku nykyinen = lukujono;
+        if (nykyinen == null) return;
+
+        TulostaLuvut(nykyinen.Seuraava);
+        Console.WriteLine(nykyinen.Arvo);
+    }
+
+    public static void Main(string[] args) {
+        if (args.Length != 1) {
+          Console.WriteLine("Anna parametrina tulostettavien lukujen lukumäärä, joka on >= 2.");
+          return;
+        }
+
+        int lkm = int.Parse(args[0]);
+        lkm = lkm - 2; // Lukumäärästä pois ekat ykköset
+          
+        if (lkm < 0) {
+            Console.WriteLine("Lukumäärän tulee olla >= 2.");
+            return;
+        }
+
+        Luku lukujono = Lisaa(null, 1);
+        lukujono = Lisaa(lukujono, 1);
+          
+        lukujono = LaskeFibo(lukujono, lkm);
+        TulostaLuvut(lukujono);
+        Console.WriteLine();
+        Tyhjenna(lukujono);
+    }
+}
